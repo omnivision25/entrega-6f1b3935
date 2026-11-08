@@ -50,9 +50,12 @@
   .pieza h2{ font-weight:300; font-size:clamp(20px,5vw,26px); letter-spacing:-.01em; }
   .nota{ color:var(--ink-2); font-size:15px; }
   .galeria{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; }
-  .galeria a{ position:relative; display:block; aspect-ratio:1; border-radius:12px; overflow:hidden; border:1px solid var(--line); }
-  .galeria img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .25s; }
-  @media (hover:hover){ .galeria a:hover img{ transform:scale(1.06); } }
+  .foto{ position:relative; aspect-ratio:1; border-radius:12px; overflow:hidden; border:1px solid var(--line); }
+  .foto .ver{ position:absolute; inset:0; display:block; }
+  .foto img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .25s; }
+  @media (hover:hover){ .foto:hover img{ transform:scale(1.06); } }
+  .foto .descarga-mini{ position:absolute; right:6px; bottom:6px; width:30px; height:30px; display:flex; align-items:center; justify-content:center;
+                         border-radius:50%; background:rgba(5,5,6,.65); border:1px solid var(--line-2); color:var(--ink); backdrop-filter:blur(4px); }
 </style>
 </head>
 <body>
@@ -61,28 +64,42 @@
   <header><div class="mono tag">Tu entrega</div><h1>This is Michael</h1></header>
   <p class="nota">Tu aftermovie y las fotos del evento, listos para ver aquí y descargar en máxima calidad.</p>
 
-  <section class="pieza" id="seccion-video" style="display:none">
+  <section class="pieza" id="seccion-video">
     <div class="mono tag">Vídeo</div>
     <h2>Aftermovie</h2>
     <div class="stage"><video controls playsinline preload="metadata" poster="media/portada.jpg" src="media/aftermovie.mp4" title="This is Michael · aftermovie"></video></div>
-    <a class="btn" id="descarga-video" href="media/aftermovie.mp4" download>
+    <a class="btn" href="media/aftermovie.mp4" download>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
-      Descargar <small id="peso-video"></small></a>
+      Descargar <small>53 MB</small></a>
   </section>
 
-  <section class="pieza" id="seccion-fotos" style="display:none">
+  <section class="pieza" id="seccion-fotos">
     <div class="mono tag">Fotos</div>
-    <h2>Galería</h2>
+    <h2>Galería · 32 fotos</h2>
     <p class="nota">Toca una foto para verla y descargarla a tamaño completo, o descarga todas en un ZIP.</p>
     <div class="galeria" id="galeria"></div>
-    <div id="descargas-zip" style="display:flex;flex-direction:column;gap:10px"></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <a class="btn" href="fotos/zips/fotos_parte_1.zip" download><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Descargar ZIP 1 de 3 <small>83 MB</small></a>
+      <a class="btn" href="fotos/zips/fotos_parte_2.zip" download><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Descargar ZIP 2 de 3 <small>86 MB</small></a>
+      <a class="btn" href="fotos/zips/fotos_parte_3.zip" download><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Descargar ZIP 3 de 3 <small>56 MB</small></a>
+    </div>
   </section>
 
-  <p class="mono" style="text-align:center;text-transform:none;letter-spacing:.04em" id="caducidad"></p>
+  <p class="mono" style="text-align:center;text-transform:none;letter-spacing:.04em">Descarga tu entrega antes del 8 de diciembre de 2026: pasado un mes desde la entrega, el enlace caduca.</p>
   <footer><a class="mono" href="https://omnivisionspain.com">omnivisionspain.com</a></footer>
 </main>
 <script>
-if(Date.now() >= new Date('FECHA_CADUCIDAD')){
+var N = 32;
+var g = document.getElementById('galeria');
+for (var i = 1; i <= N; i++) {
+  var n = (i < 10 ? '0' + i : i);
+  var div = document.createElement('div');
+  div.className = 'foto';
+  div.innerHTML = '<a class="ver" href="fotos/web/michael-' + n + '.jpg" target="_blank" rel="noreferrer"><img src="fotos/thumb/michael-' + n + '.jpg" loading="lazy" alt="This is Michael foto ' + i + '"></a>' +
+    '<a class="descarga-mini" href="fotos/full/michael-' + n + '.jpg" download title="Descargar a tamaño completo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></a>';
+  g.appendChild(div);
+}
+if(Date.now() >= new Date('2026-12-09T00:00:00+01:00')){
   document.querySelector('main').innerHTML = '<div class="top"><img src="../icons/iris.svg" alt=""><b>OmniVision</b></div><header><h1>Este enlace ya ha caducado</h1></header><p class="nota">Escríbenos a <a href="mailto:info@omnivisionspain.com" style="color:var(--blue-l)">info@omnivisionspain.com</a> y te lo enviamos de nuevo.</p>';
 }
 </script>
